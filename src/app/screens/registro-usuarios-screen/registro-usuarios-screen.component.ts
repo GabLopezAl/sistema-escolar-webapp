@@ -50,7 +50,60 @@ export class RegistroUsuariosScreenComponent implements OnInit {
       this.idUser = this.activatedRoute.snapshot.params['id'];
       console.log("ID user: ", this.idUser);
       // Al iniciar la vista obtiene al usuaio por su id
-      //this.obtenerUserByID();
+      this.obtenerUserByID();
+    }
+  }
+
+  //Función para obtener un solo usuario por su ID
+  public obtenerUserByID() {
+    if (this.rol == "administrador") {
+      this.administradoresService.getAdminByID(this.idUser).subscribe(
+        (response) => {
+          this.user = response;
+          //Agregamos valores faltantes
+          this.user.first_name = response.user.first_name;
+          this.user.last_name = response.user.last_name;
+          this.user.email = response.user.email;
+          this.user.tipo_usuario = this.rol;
+          this.isAdmin = true;
+          //this.user.fecha_nacimiento = response.fecha_nacimiento.split("T")[0];
+          console.log("Datos admin: ", this.user);
+        }, (error) => {
+          alert("No se pudieron obtener los datos del usuario para editar");
+        }
+      );
+    } else if (this.rol == "maestro") {
+      this.maestrosService.getMaestroByID(this.idUser).subscribe(
+        (response) => {
+          this.user = response;
+          //Agregamos valores faltantes
+          this.user.first_name = response.user.first_name;
+          this.user.last_name = response.user.last_name;
+          this.user.email = response.user.email;
+          this.user.tipo_usuario = this.rol;
+          this.isMaestro = true;
+          this.user.fecha_nacimiento = response.fecha_nacimiento.split("T")[0];
+          console.log("Datos maestro: ", this.user);
+        }, (error) => {
+          alert("No se pudieron obtener los datos del usuario para editar");
+        }
+      );
+    } else if (this.rol == "alumno") {
+      this.alumnosService.getAlumnoByID(this.idUser).subscribe(
+        (response) => {
+          this.user = response;
+          //Agregamos valores faltantes
+          this.user.first_name = response.user.first_name;
+          this.user.last_name = response.user.last_name;
+          this.user.email = response.user.email;
+          this.user.tipo_usuario = this.rol;
+          this.isAlumno = true;
+          this.user.fecha_nacimiento = response.fecha_nacimiento.split("T")[0];
+          console.log("Datos alumno: ", this.user);
+        }, (error) => {
+          alert("No se pudieron obtener los datos del usuario para editar");
+        }
+      );
     }
   }
 
