@@ -18,7 +18,7 @@
               <a class="nav-link" id="maestro" (click)="clickNavLink('maestros')">Maestros</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link">Eventos académicos</a>
+              <a class="nav-link" id="eventos" (click)="clickNavLink('eventos')">Eventos académicos</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" id="graficas" (click)="clickNavLink('graficas')">Gráficas</a>
@@ -32,16 +32,27 @@
                 <li><a class="dropdown-item" (click)="goRegistro()" *ngIf="rol!='alumno'">Alumnos</a></li>
                 <li><a class="dropdown-item" (click)="goRegistro()" *ngIf="rol!='maestro' && rol!='alumno'">Maestros</a>
                 </li>
-                <li>
-                  <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="#">Materias</a></li>
+                <div *ngIf="rol!='maestro' && rol!='alumno'">
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" (click)="goRegistroEventos()">Eventos</a></li>
+                </div>
               </ul>
             </li>
           </ng-container>
           <ng-template #registraUsers>
-            <label class="navbar-brand" *ngIf="!editar">Registro de usuarios del sistema</label>
-            <label class="navbar-brand" *ngIf="editar">Editar usuario del sistema</label>
+            <!-- VISTA DE USUARIOS -->
+            <ng-container *ngIf="esVistaUsuarios">
+              <label class="navbar-brand" *ngIf="!editar">Registro de usuarios del sistema</label>
+              <label class="navbar-brand" *ngIf="editar">Editar usuario del sistema</label>
+            </ng-container>
+
+            <!-- VISTA DE EVENTOS -->
+            <ng-container *ngIf="!esVistaUsuarios">
+              <label class="navbar-brand" *ngIf="!editar">Registro de eventos académicos</label>
+              <label class="navbar-brand" *ngIf="editar">Editar eventos académicos</label>
+            </ng-container>
           </ng-template>
         </ul>
         <form class="d-flex">

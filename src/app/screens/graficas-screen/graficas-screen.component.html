@@ -13,7 +13,7 @@
         <div class="row mt-3 mb-5" style="text-align: center;">
           <div class="col-12">
             <div class="alert alert-primary" role="alert">
-              <span class="title-table">Análisis de eventos académicos</span>
+              <span class="title-table">Análisis de usuarios</span>
             </div>
           </div>
         </div>
@@ -22,24 +22,12 @@
           <div class="col-12">
             <div class="row">
               <div class="col-6 graph">
-                <canvas
-                  baseChart
-                  width="600"
-                  height="400"
-                  type="line"
-                  [data]="lineChartData"
-                  [plugins]="lineChartPlugins"
-                  [options]="lineChartOption"></canvas>
+                <canvas #lineChart baseChart width="600" height="400" type="line" [data]="lineChartData"
+                  [plugins]="lineChartPlugins" [options]="lineChartOption"></canvas>
               </div>
               <div class="col-6 graph">
-                <canvas
-                  baseChart
-                  width="600"
-                  height="400"
-                  type="bar"
-                  [data]="barChartData"
-                  [plugins]="barChartPlugins"
-                  [options]="barChartOption"></canvas>
+                <canvas #barChart baseChart width="600" height="400" type="bar" [data]="barChartData"
+                  [plugins]="barChartPlugins" [options]="barChartOption"></canvas>
               </div>
             </div>
           </div>
@@ -54,27 +42,13 @@
         <div class="row w-100 mt-5 mb-5" style="text-align: center;">
           <!-- Gráfica de pastel -->
           <div class="col-6 graph">
-            <canvas
-              #pieChart
-              baseChart
-              width="600"
-              height="400"
-              type="pie"
-              [data]="pieChartData"
-              [plugins]="pieChartPlugins"
-              [options]="pieChartOption"></canvas>
+            <canvas #pieChart baseChart width="600" height="400" type="pie" [data]="pieChartData"
+              [plugins]="pieChartPlugins" [options]="pieChartOption"></canvas>
           </div>
           <!-- Gráfica de Dona -->
           <div class="col-6 graph">
-            <canvas
-              #doughnutChart
-              baseChart
-              width="600"
-              height="400"
-              type="doughnut"
-              [data]="doughnutChartData"
-              [plugins]="doughnutChartPlugins"
-              [options]="doughnutChartOption"></canvas>
+            <canvas #doughnutChart baseChart width="600" height="400" type="doughnut" [data]="doughnutChartData"
+              [plugins]="doughnutChartPlugins" [options]="doughnutChartOption"></canvas>
           </div>
         </div>
       </div>

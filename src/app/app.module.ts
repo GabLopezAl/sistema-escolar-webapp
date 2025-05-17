@@ -39,6 +39,7 @@ import { MaestrosScreenComponent } from './screens/maestros-screen/maestros-scre
 import { EliminarUserModalComponent } from './modals/eliminar-user-modal/eliminar-user-modal.component';
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { NgChartsModule } from 'ng2-charts';
+import { RegistroEventosComponent } from './partials/registro-eventos/registro-eventos.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { NgChartsModule } from 'ng2-charts';
     AlumnosScreenComponent,
     MaestrosScreenComponent,
     EliminarUserModalComponent,
-    GraficasScreenComponent
+    GraficasScreenComponent,
+    RegistroEventosComponent,
   ],
   imports: [
     BrowserModule,

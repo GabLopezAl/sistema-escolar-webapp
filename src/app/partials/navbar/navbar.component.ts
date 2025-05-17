@@ -15,6 +15,8 @@ export class NavbarComponent implements OnInit {
 
   public token: string = "";
   public editar: boolean = false;
+  public esVistaUsuarios: boolean = true;
+
 
   constructor(
     private router: Router,
@@ -35,6 +37,19 @@ export class NavbarComponent implements OnInit {
     }
   }
 
+  irARegistrarUsuario() {
+    this.esVistaUsuarios = true;
+    this.editar = false;
+    // navegar o mostrar formulario
+  }
+
+  irARegistrarEvento() {
+    this.esVistaUsuarios = false;
+    this.editar = false;
+    // navegar o mostrar formulario
+  }
+
+
   public logout() {
     this.facadeService.logout().subscribe(
       (response) => {
@@ -49,7 +64,15 @@ export class NavbarComponent implements OnInit {
   }
 
   public goRegistro() {
+    this.esVistaUsuarios = true;
+    this.editar = false;
     this.router.navigate(["registro-usuarios"]);
+  }
+
+  public goRegistroEventos() {
+    this.esVistaUsuarios = false;
+    this.editar = false;
+    this.router.navigate(["registro-eventos"]);
   }
 
   public clickNavLink(link: string) {

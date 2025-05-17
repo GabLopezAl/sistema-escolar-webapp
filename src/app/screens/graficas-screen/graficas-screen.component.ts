@@ -1,8 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { AdministradoresService } from 'src/app/services/administradores.service';
-import { ChangeDetectorRef } from '@angular/core';
-import { ViewChild } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
@@ -10,92 +8,74 @@ import { BaseChartDirective } from 'ng2-charts';
   templateUrl: './graficas-screen.component.html',
   styleUrls: ['./graficas-screen.component.scss']
 })
-export class GraficasScreenComponent implements OnInit {
+export class GraficasScreenComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('pieChart', { static: false }) pieChart!: BaseChartDirective;
-  @ViewChild('doughnutChart', { static: false }) doughnutChart!: BaseChartDirective;
+  @ViewChild('lineChart', { static: false, read: BaseChartDirective }) lineChart!: BaseChartDirective;
+  @ViewChild('barChart', { static: false, read: BaseChartDirective }) barChart!: BaseChartDirective;
+  @ViewChild('pieChart', { static: false, read: BaseChartDirective }) pieChart!: BaseChartDirective;
+  @ViewChild('doughnutChart', { static: false, read: BaseChartDirective }) doughnutChart!: BaseChartDirective;
 
-  //Variables
+
   public total_user: any = {};
 
-  //Histograma
+  // Histograma
   lineChartData = {
     labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
     datasets: [
       {
         data: [89, 34, 43, 54, 28, 74, 93],
-        label: 'Registro de eventos académicos',
+        label: 'Total de usuarios',
         backgroundColor: '#F88406'
       }
     ]
+  };
 
-  }
-
-  lineChartOption = {
-    responsive: true
-  }
+  lineChartOption = { responsive: true };
   lineChartPlugins = [DatalabelsPlugin];
 
-  //Barras
+  // Barras
   barChartData = {
     labels: ["Congreso", "FePro", "Presentación Doctoral", "Feria Matemáticas", "T-System"],
     datasets: [
       {
         data: [34, 43, 54, 28, 74],
-        label: 'Registro de eventos académicos',
-        backgroundColor: [
-          '#F88406',
-          '#FCFF44',
-          '#82D3FB',
-          '#FB82F5',
-          '#2AD84A'
-        ]
+        label: 'Total de usuarios',
+        backgroundColor: ['#F88406', '#FCFF44', '#82D3FB', '#FB82F5', '#2AD84A']
       }
     ]
-  }
-  barChartOption = {
-    responsive: false
-  }
-  barChartPlugins = [DatalabelsPlugin]
+  };
 
-  //Circular
+  barChartOption = { responsive: false };
+  barChartPlugins = [DatalabelsPlugin];
+
+  // Circular (Pie)
   pieChartData = {
     labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
         data: [0, 0, 0],
         label: 'Registro de usuarios',
-        backgroundColor: [
-          '#FCFF44',
-          '#F1C8F2',
-          '#31E731'
-        ]
+        backgroundColor: ['#FCFF44', '#F1C8F2', '#31E731']
       }
     ]
-  }
-  pieChartOption = {
-    responsive: true
-  }
+  };
+
+  pieChartOption = { responsive: true, maintainAspectRatio: false };
   pieChartPlugins = [DatalabelsPlugin];
 
-  // Doughnut
+  // Dona (Doughnut)
   doughnutChartData = {
     labels: ["Administradores", "Maestros", "Alumnos"],
     datasets: [
       {
         data: [0, 0, 0],
         label: 'Registro de usuarios',
-        backgroundColor: [
-          '#F88406',
-          '#FCFF44',
-          '#31E7E7'
-        ]
+        backgroundColor: ['#F88406', '#FCFF44', '#31E7E7']
       }
     ]
-  }
-  doughnutChartOption = {
-    responsive: false
-  }
+  };
+
+  doughnutChartOption = { responsive: false, maintainAspectRatio: false };
   doughnutChartPlugins = [DatalabelsPlugin];
 
   constructor(
@@ -105,14 +85,6 @@ export class GraficasScreenComponent implements OnInit {
 
   ngOnInit(): void {
     this.obtenerTotalUsers();
-    console.log("Data: ", this.doughnutChartData);
-    setTimeout(() => {
-      this.pieChartData.datasets[0].data = [3, 5, 7];
-      this.doughnutChartData.datasets[0].data = [2, 6, 4];
-      this.pieChart.chart?.update();
-      this.doughnutChart.chart?.update();
-    }, 1000);
-
   }
 
   ngAfterViewInit(): void {
@@ -120,45 +92,44 @@ export class GraficasScreenComponent implements OnInit {
     console.log("doughnutChart después de view init:", this.doughnutChart);
   }
 
-
-  public obtenerTotalUsers() {
+  public obtenerTotalUsers(): void {
     this.administradoresServices.getTotalUsuarios().subscribe(
       (response) => {
         this.total_user = response;
         console.log("Total usuarios: ", this.total_user);
 
-        // Actualiza dinámicamente las gráficas
-        this.pieChartData.datasets[0].data = [
-          this.total_user.total_administradores,
-          this.total_user.total_maestros,
-          this.total_user.total_alumnos
-        ];
+        const admin = this.total_user.total_administradores ?? 0;
+        const maestros = this.total_user.total_maestros ?? 0;
+        const alumnos = this.total_user.total_alumnos ?? 0;
 
-        this.doughnutChartData.datasets[0].data = [
-          this.total_user.total_administradores,
-          this.total_user.total_maestros,
-          this.total_user.total_alumnos
-        ];
-        console.log(this.pieChartData.datasets[0].data)
-        console.log(this.doughnutChartData.datasets[0].data)
-        console.log("PieChart instance:", this.pieChart);
-        console.log("DoughnutChart instance:", this.doughnutChart);
+        // Actualizar datos para gráfica de líneas
+        this.lineChartData.labels = ["Administradores", "Maestros", "Alumnos"];
+        this.lineChartData.datasets[0].data = [admin, maestros, alumnos];
 
-        // Refresca las gráficas
+        // Actualizar datos para gráfica de barras
+        this.barChartData.labels = ["Administradores", "Maestros", "Alumnos"];
+        this.barChartData.datasets[0].data = [admin, maestros, alumnos];
+
+
+        // Actualizar datos de las gráficas
+        this.pieChartData.datasets[0].data = [admin, maestros, alumnos];
+        this.doughnutChartData.datasets[0].data = [admin, maestros, alumnos];
+
         this.cdr.detectChanges();
-        this.pieChart?.chart?.update();
-        this.doughnutChart?.chart?.update();
 
+        setTimeout(() => {
+          if (this.pieChart?.chart) this.pieChart.chart.update();
+          if (this.doughnutChart?.chart) this.doughnutChart.chart.update();
+          if (this.lineChart?.chart) this.lineChart.chart.update();
+          if (this.barChart?.chart) this.barChart.chart.update();
+        }, 0);
 
-      }, (error) => {
-        console.log(error);
+      },
+      (error) => {
+        console.error("Error al obtener usuarios:", error);
         alert("No se pudo obtener el total de cada rol de usuarios");
       }
-
     );
   }
-
-
-
-
 }
+
