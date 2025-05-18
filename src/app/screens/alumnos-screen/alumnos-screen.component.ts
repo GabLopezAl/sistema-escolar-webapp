@@ -80,7 +80,7 @@ export class AlumnosScreenComponent implements OnInit{
               usuario.last_name = usuario.user.last_name;
               usuario.email = usuario.user.email;
             });
-            console.log("Maestros: ", this.lista_alumnos);
+            console.log("Alumnos: ", this.lista_alumnos);
   
             this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
           }

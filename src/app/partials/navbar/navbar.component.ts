@@ -35,6 +35,17 @@ export class NavbarComponent implements OnInit {
     if (this.activatedRoute.snapshot.params['id'] != undefined) {
       this.editar = true;
     }
+
+    this.router.events.subscribe(() => {
+      const currentUrl = this.router.url;
+
+      // Ajusta estas rutas según tus paths reales
+      if (currentUrl.includes('registro-eventos')) {
+        this.esVistaUsuarios = false;
+      } else if (currentUrl.includes('registro-usuarios')) {
+        this.esVistaUsuarios = true;
+      }
+    });
   }
 
   irARegistrarUsuario() {
@@ -64,14 +75,10 @@ export class NavbarComponent implements OnInit {
   }
 
   public goRegistro() {
-    this.esVistaUsuarios = true;
-    this.editar = false;
     this.router.navigate(["registro-usuarios"]);
   }
 
   public goRegistroEventos() {
-    this.esVistaUsuarios = false;
-    this.editar = false;
     this.router.navigate(["registro-eventos"]);
   }
 

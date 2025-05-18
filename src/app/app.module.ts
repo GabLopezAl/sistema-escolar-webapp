@@ -26,6 +26,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 //Cambia el idioma a español
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 
 import { RegistroUsuariosScreenComponent } from './screens/registro-usuarios-screen/registro-usuarios-screen.component';
 import { HomeScreenComponent } from './screens/home-screen/home-screen.component';
@@ -77,7 +78,8 @@ import { RegistroEventosComponent } from './partials/registro-eventos/registro-e
     MatTableModule,
     MatPaginatorModule,
     MatDialogModule,
-    NgChartsModule
+    NgChartsModule,
+    NgxMatTimepickerModule
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'es-ES' },
