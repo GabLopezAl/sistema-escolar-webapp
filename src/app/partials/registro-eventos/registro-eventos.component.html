@@ -51,13 +51,13 @@
 
                 <mat-form-field class="mat-input" appearance="outline">
                     <mat-label>Tipo de evento</mat-label>
-                    <mat-select [(ngModel)]="evento.tipoE" name="tipoE">
+                    <mat-select [(ngModel)]="evento.tipoEvento" name="tipoEvento">
                         <mat-option *ngFor="let tipo of tiposEvento" [value]="tipo">
                             {{ tipo }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
-                <div *ngIf="errors.tipoE" class="invalid-feedback">{{ errors.tipoE }}</div>
+                <div *ngIf="errors.tipoEvento" class="invalid-feedback">{{ errors.tipoEvento }}</div>
 
                 <!-- Cambio de input de fecha -->
                 <mat-form-field class="mat-input" appearance="outline">
@@ -107,12 +107,12 @@
                         </div>
                     </div>
                     <div class="checkbox-group" *ngFor="let pub of publicObj; let i = index">
-                        <mat-checkbox class="checkbox-item opc-sc" name="opsc" [checked]="isSelected(pub.nombre)"
+                        <mat-checkbox class="checkbox-item opc-sc" name="publicoObjetivo" [checked]="isSelected(pub.nombre)"
                             (change)="checkboxChange($event, pub.nombre)" value="{{pub.nombre}}">
                             <div class="d-checkbox-nombre">{{pub.nombre}}</div>
                         </mat-checkbox>
                     </div>
-                    <div *ngIf="errors.opsc" class="invalid-feedback">{{ errors.opsc }}</div>
+                    <div *ngIf="errors.publicoObjetivo" class="invalid-feedback">{{ errors.publicoObjetivo }}</div>
                 </div>
 
                 <!-- Select de programa educativo, solo si se seleccionó "Estudiantes" -->

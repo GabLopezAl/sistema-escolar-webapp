@@ -39,7 +39,6 @@ export class NavbarComponent implements OnInit {
     this.router.events.subscribe(() => {
       const currentUrl = this.router.url;
 
-      // Ajusta estas rutas según tus paths reales
       if (currentUrl.includes('registro-eventos')) {
         this.esVistaUsuarios = false;
       } else if (currentUrl.includes('registro-usuarios')) {
@@ -51,13 +50,11 @@ export class NavbarComponent implements OnInit {
   irARegistrarUsuario() {
     this.esVistaUsuarios = true;
     this.editar = false;
-    // navegar o mostrar formulario
   }
 
   irARegistrarEvento() {
     this.esVistaUsuarios = false;
     this.editar = false;
-    // navegar o mostrar formulario
   }
 
 
@@ -107,6 +104,12 @@ export class NavbarComponent implements OnInit {
       $("#maestro").removeClass("active");
       $("#principal").removeClass("active");
       $("#graficas").addClass("active");
+    } else if (link == "eventos") {
+      $("#alumno").removeClass("active");
+      $("#maestro").removeClass("active");
+      $("#principal").removeClass("active");
+      $("#graficas").removeClass("active");
+      $("#eventos").addClass("active");
     }
   }
 }

@@ -19,7 +19,6 @@ export class RegistroEventosComponent implements OnInit {
   public errors: any = {};
   public editar: boolean = false;
   public token: string = "";
-  public idUser: Number = 0;
   public tipo: string = "registro-usuarios";
   public minDate: Date = new Date();
   public horaInicio: string = '';
@@ -38,9 +37,9 @@ export class RegistroEventosComponent implements OnInit {
   public programaEducativo: string = '';
   public responsableSeleccionado: string = '';
   public descripcion: string = '';
-  public cupoMaximo: any;
+  public cupoMaximo: string = '';
   public nombre: string = '';
-  public tipoE: string = '';
+  public tipoEvento: string = '';
   public fecha_realizacion: string = '';
   public opsc: string = '';
   public responsable: string = '';
@@ -58,12 +57,12 @@ export class RegistroEventosComponent implements OnInit {
   ngOnInit(): void {
     this.errors = {
       nombre: '',
-      tipoE: '',
+      tipoEvento: '',
       fecha_realizacion: '',
       horaInicio: '',
       horaFin: '',
       lugar: '',
-      opsc: '',
+      publicoObjetivo: '',
       programaEducativo: '',
       responsable: '',
       descripcion: '',
@@ -76,24 +75,18 @@ export class RegistroEventosComponent implements OnInit {
   public registrar() {
     this.evento.horaInicio = this.convertirA24Horas(this.horaInicio);
     this.evento.horaFin = this.convertirA24Horas(this.horaFin);
-    console.log('Enviando horas al backend:', this.evento.horaInicio, this.evento.horaFin);
-
-    // this.evento.nombre = this.nombre;
-    // this.evento.tipoE = this.tipoE;
-    // this.evento.fecha_realizacion = this.fecha_realizacion;
-    // this.evento.horaInicio = this.horaInicio;
-    // this.evento.horaFin = this.horaFin;
-    // this.evento.lugar = this.lugar;
-    this.evento.opsc = this.seleccionados.join(', ');
-    // this.evento.programaEducativo = this.programaEducativo;
-    // this.evento.responsable = this.responsable;
-    // this.evento.descripcion = this.descripcion;
-    // this.evento.cupoMaximo = this.cupoMaximo;
-    // etc.
+    this.evento.publicoObjetivo = this.seleccionados.join(', ');
 
     //Validación del formulario
     this.errors = [];
     this.validarHoras();
+
+    if (this.errors.horaInicio || this.errors.horaFin) {
+      this.errorHora = 'Las horas no son válidas.';
+      return false;
+    } else {
+      this.errorHora = '';
+    }
 
     this.errors = this.eventosService.validarEvento(this.evento, this.editar);
     if (!$.isEmptyObject(this.errors)) {
@@ -115,8 +108,6 @@ export class RegistroEventosComponent implements OnInit {
       }
     );
   }
-
-
 
   obtenerResponsables() {
     this.maestrosService.obtenerListaMaestros().subscribe(maestros => {
@@ -153,21 +144,7 @@ export class RegistroEventosComponent implements OnInit {
     this.lugar = this.lugar.replace(/[^a-zA-Z0-9 ]/g, '');
   }
 
-  // validarHoras() {
-  //   this.errors = {};
-
-  //   if (this.horaInicio && this.horaFin) {
-  //     const inicio = this.convertirAHoras(this.horaInicio);
-  //     const fin = this.convertirAHoras(this.horaFin);
-
-  //     if (inicio >= fin) {
-  //       this.errors.horaInicio = 'La hora de inicio debe ser menor que la de finalización';
-  //       this.errors.horaFin = 'La hora de finalización debe ser mayor que la de inicio';
-  //     }
-  //   }
-  // }
   validarHoras() {
-    // Solo quitamos errores previos de horas, no del resto
     delete this.errors.horaInicio;
     delete this.errors.horaFin;
 
@@ -181,7 +158,6 @@ export class RegistroEventosComponent implements OnInit {
       }
     }
   }
-
 
   private convertirAHoras(hora: string): number {
     const [time, meridian] = hora.split(' ');
@@ -212,7 +188,6 @@ export class RegistroEventosComponent implements OnInit {
     }
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
-
 
   public regresar() {
     this.location.back();
@@ -265,7 +240,5 @@ export class RegistroEventosComponent implements OnInit {
       event.preventDefault();
     }
   }
-
-
 
 }

@@ -12,27 +12,27 @@ import { FacadeService } from 'src/app/services/facade.service';
   templateUrl: './alumnos-screen.component.html',
   styleUrls: ['./alumnos-screen.component.scss']
 })
-export class AlumnosScreenComponent implements OnInit{
-  public name_user:string = "";
-  public rol:string = "";
+export class AlumnosScreenComponent implements OnInit {
+  public name_user: string = "";
+  public rol: string = "";
   public token: string = "";
-  public lista_alumnos:any[] = [];
+  public lista_alumnos: any[] = [];
 
   //Para la tabla // Columnas a mostrar
-    displayedColumns: string[] = ['matricula', 'nombre', 'email', 'fecha_nacimiento', 'curp', 'rfc', 'edad', 'telefono', 'ocupacion', 'editar', 'eliminar'];
-    dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
+  displayedColumns: string[] = ['matricula', 'nombre', 'email', 'fecha_nacimiento', 'curp', 'rfc', 'edad', 'telefono', 'ocupacion', 'editar', 'eliminar'];
+  dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
 
-    @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
-    ngAfterViewInit() {
-      this.dataSource.paginator = this.paginator;
-    }
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
   constructor(
     private alumnosService: AlumnosService,
-    private  facadeService: FacadeService,
+    private facadeService: FacadeService,
     private router: Router,
     public dialog: MatDialog
-  ){}
+  ) { }
 
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
@@ -45,7 +45,7 @@ export class AlumnosScreenComponent implements OnInit{
   }
 
   //Para paginación
-  public initPaginator(){
+  public initPaginator() {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       //console.log("Paginator: ", this.dataSourceIngresos.paginator);
@@ -64,55 +64,55 @@ export class AlumnosScreenComponent implements OnInit{
       this.paginator._intl.lastPageLabel = 'Última página';
       this.paginator._intl.previousPageLabel = 'Página anterior';
       this.paginator._intl.nextPageLabel = 'Página siguiente';
-    },500);
+    }, 500);
     //this.dataSourceIngresos.paginator = this.paginator;
   }
 
-  public obtenerAlumnos(){
-      this.alumnosService.obtenerListaAlumnos().subscribe(
-        (response)=>{
-          this.lista_alumnos = response;
-          console.log("Lista users: ", this.lista_alumnos);
-          if(this.lista_alumnos.length > 0){
-            //Agregar datos del nombre e email
-            this.lista_alumnos.forEach(usuario => {
-              usuario.first_name = usuario.user.first_name;
-              usuario.last_name = usuario.user.last_name;
-              usuario.email = usuario.user.email;
-            });
-            console.log("Alumnos: ", this.lista_alumnos);
-  
-            this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
-          }
-        }, (error)=>{
-          alert("No se pudo obtener la lista de alumnos");
-        }
-      );
-    }
+  public obtenerAlumnos() {
+    this.alumnosService.obtenerListaAlumnos().subscribe(
+      (response) => {
+        this.lista_alumnos = response;
+        console.log("Lista users: ", this.lista_alumnos);
+        if (this.lista_alumnos.length > 0) {
+          //Agregar datos del nombre e email
+          this.lista_alumnos.forEach(usuario => {
+            usuario.first_name = usuario.user.first_name;
+            usuario.last_name = usuario.user.last_name;
+            usuario.email = usuario.user.email;
+          });
+          console.log("Alumnos: ", this.lista_alumnos);
 
-  public goEditar(idUser: number){
-    this.router.navigate(["registro-usuarios/alumno/"+idUser]);
+          this.dataSource = new MatTableDataSource<DatosUsuario>(this.lista_alumnos as DatosUsuario[]);
+        }
+      }, (error) => {
+        alert("No se pudo obtener la lista de alumnos");
+      }
+    );
+  }
+
+  public goEditar(idEvento: number) {
+    this.router.navigate(["registro-usuarios/alumno/" + idEvento]);
 
   }
 
-  public delete(idUser: number) {
-      const dialogRef = this.dialog.open(EliminarUserModalComponent, {
-        data: { id: idUser, rol: 'alumno' }, //Se pasan valores a través del componente
-        height: '288px',
-        width: '328px',
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if (result.isDelete) {
-          console.log("Alumno eliminado");
-          //Recargar página
-          window.location.reload();
-        } else {
-          alert("Alumno no eliminado ");
-          console.log("No se eliminó el alumno");
-        }
-      });
-    }
+  public delete(idEvento: number) {
+    const dialogRef = this.dialog.open(EliminarUserModalComponent, {
+      data: { id: idEvento, rol: 'alumno' }, //Se pasan valores a través del componente
+      height: '288px',
+      width: '328px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.isDelete) {
+        console.log("Alumno eliminado");
+        //Recargar página
+        window.location.reload();
+      } else {
+        alert("Alumno no eliminado ");
+        console.log("No se eliminó el alumno");
+      }
+    });
+  }
 
 }
 

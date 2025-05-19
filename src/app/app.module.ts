@@ -41,6 +41,7 @@ import { EliminarUserModalComponent } from './modals/eliminar-user-modal/elimina
 import { GraficasScreenComponent } from './screens/graficas-screen/graficas-screen.component';
 import { NgChartsModule } from 'ng2-charts';
 import { RegistroEventosComponent } from './partials/registro-eventos/registro-eventos.component';
+import { EventosScreenComponent } from './screens/eventos-screen/eventos-screen.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { RegistroEventosComponent } from './partials/registro-eventos/registro-e
     EliminarUserModalComponent,
     GraficasScreenComponent,
     RegistroEventosComponent,
+    EventosScreenComponent,
   ],
   imports: [
     BrowserModule,
