@@ -69,6 +69,41 @@ export class RegistroEventosComponent implements OnInit {
       cupoMaximo: ''
     };
     this.obtenerResponsables();
+
+    const idEvento = this.activatedRoute.snapshot.params['id'];
+
+    if (idEvento) {
+      this.editar = true;
+      this.eventosService.getEventoById(idEvento).subscribe((evento) => {
+        this.evento = evento;
+
+        this.evento.responsable = evento.responsable;
+
+
+        // Busca en la lista de responsables cargados para preseleccionar
+        const responsableObj = this.responsables.find(r => r.id === evento.responsable);
+        if (responsableObj) {
+          this.responsable = responsableObj.first_name; // asigna el ID, pero el select mostrará el nombre
+        }
+
+        // Prellenar valores individuales
+        this.nombre = evento.nombre;
+        this.tipoEvento = evento.tipoEvento;
+        this.fecha_realizacion = evento.fecha_realizacion;
+        this.horaInicio = this.convertirA24Horas(evento.horaInicio);
+        this.horaFin = this.convertirA24Horas(evento.horaFin);
+        this.lugar = evento.lugar;
+        this.descripcion = evento.descripcion;
+        this.cupoMaximo = evento.cupoMaximo;
+        this.responsable = evento.responsable;
+        this.programaEducativo = evento.programaEducativo;
+
+        // Convertir string a array
+        this.seleccionados = evento.publicoObjetivo ? evento.publicoObjetivo.split(',').map(p => p.trim()) : [];
+
+        console.log("Evento cargado para editar:", this.evento);
+      });
+    }
   }
 
 

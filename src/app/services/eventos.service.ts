@@ -97,11 +97,7 @@ export class EventosService {
     return this.http.post<any>(`${environment.url_api}/evento/`, data, { headers: headers });
   }
 
-  // public obtenerListaEventos(): Observable<any> {
-  //   var token = this.facadeService.getSessionToken();
-  //   var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
-  //   return this.http.get<any>(`${environment.url_api}/lista-eventos/`, { headers: headers });
-  // }
+
   public obtenerListaEventos(rol: string): Observable<any> {
     const token = this.facadeService.getSessionToken();
     const headers = new HttpHeaders({
@@ -113,5 +109,21 @@ export class EventosService {
     return this.http.get<any>(`${environment.url_api}/lista-eventos/?rol=${rol}`, { headers: headers });
   }
 
+  // //Obtener un solo evento dependiendo su ID
+  // public getEventoById(idEvento: Number) {
+  //   return this.http.get<any>(`${environment.url_api}/evento/?id=${idEvento}`, httpOptions);
+  // }
+  public getEventoById(idEvento: Number) {
+    var token = this.facadeService.getSessionToken();
+    var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    return this.http.get<any>(`${environment.url_api}/evento/?id=${idEvento}`, { headers });
+  }
 
+
+  //Servicio para actualizar un evento
+  public editarEvento(data: any): Observable<any> {
+    var token = this.facadeService.getSessionToken();
+    var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
+    return this.http.put<any>(`${environment.url_api}/eventos-edit/`, data, { headers: headers });
+  }
 }

@@ -21,6 +21,7 @@ const routes: Routes = [
   { path: 'graficas', component: GraficasScreenComponent, pathMatch: 'full' },
   { path: 'registro-eventos', component: RegistroEventosComponent, pathMatch: 'full' },
   { path: 'eventos', component: EventosScreenComponent, pathMatch: 'full' },
+  { path: 'registro-eventos/eventos/:id', component: RegistroEventosComponent, pathMatch: 'full' },
 ];
 
 @NgModule({

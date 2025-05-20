@@ -58,37 +58,6 @@ export class RegistroMaestrosComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.maestro = this.maestrosService.esquemaMaestro();
-    // this.maestro.rol = this.rol;
-    // console.log("Los datos del maestro son: ", this.maestro);
-
-    // this.alumno = this.alumnosService.esquemaAlumno();
-    // this.alumno.rol = this.rol;
-    // console.log("Los datos del alumno son: ", this.alumno);
-    // this.admin = this.administradoresService.esquemaAdmin();
-    // this.admin.rol = this.rol;
-    // console.log("Los datos del admin son: ", this.admin);
-    //El primer if valida si existe un parámetro en la URL
-    // if (this.activatedRoute.snapshot.params['id'] != undefined) {
-    //   this.editar = true;
-    //   //Asignamos a nuestra variable global el valor del ID que viene por la URL
-    //   this.idUser = this.activatedRoute.snapshot.params['id'];
-    //   console.log("ID User: ", this.idUser);
-    //   //Al iniciar la vista asignamos los datos del user
-    //   this.maestro = this.datos_user;
-    // } else {
-    //   this.maestro = this.maestrosService.esquemaMaestro();
-    //   this.maestro.rol = this.rol;
-    //   this.token = this.facadeService.getSessionToken();
-    // }
-    // //Imprimir datos en consola
-    // console.log("Maestro: ", this.maestro);
-    // this.alumno = this.alumnosService.esquemaAlumno();
-    // this.alumno.rol = this.rol;
-    // console.log("Los datos del alumno son: ", this.alumno);
-    // this.admin = this.administradoresService.esquemaAdmin();
-    // this.admin.rol = this.rol;
-    // console.log("Los datos del admin son: ", this.admin);
     //El primer if valida si existe un parámetro en la URL
     if (this.activatedRoute.snapshot.params['id'] != undefined) {
       this.editar = true;

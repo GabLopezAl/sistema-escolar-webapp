@@ -20,7 +20,8 @@ export class EventosScreenComponent implements OnInit {
   public lista_eventos: any[] = [];
 
   //Para la tabla // Columnas a mostrar
-  displayedColumns: string[] = ['nombre', 'tipoEvento', 'fecha_realizacion', 'horaInicio', 'horaFin', 'lugar', 'programaEducativo', 'cupoMaximo', 'publicoObjetivo', 'editar', 'eliminar'];
+  //displayedColumns: string[] = ['nombre', 'tipoEvento', 'fecha_realizacion', 'horaInicio', 'horaFin', 'lugar', 'programaEducativo', 'cupoMaximo', 'publicoObjetivo', 'editar', 'eliminar'];
+  displayedColumns: string[] = [];
   dataSource = new MatTableDataSource<DatosEvento>(this.lista_eventos as DatosEvento[]);
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -38,6 +39,23 @@ export class EventosScreenComponent implements OnInit {
   ngOnInit(): void {
     this.name_user = this.facadeService.getUserCompleteName();
     this.rol = this.facadeService.getUserGroup();
+
+    this.displayedColumns = [
+      'nombre',
+      'tipoEvento',
+      'fecha_realizacion',
+      'horaInicio',
+      'horaFin',
+      'lugar',
+      'programaEducativo',
+      'cupoMaximo',
+      'publicoObjetivo',
+    ];
+
+    if (this.rol === 'administrador') {
+      this.displayedColumns.push('editar');
+      this.displayedColumns.push('eliminar');
+    }
 
     //Obtener eventos
     this.obtenerEventos();
@@ -71,19 +89,6 @@ export class EventosScreenComponent implements OnInit {
   }
 
   public obtenerEventos() {
-    // this.eventosService.obtenerListaEventos().subscribe(
-    //   (response) => {
-    //     this.lista_eventos = response;
-    //     console.log("Lista eventos: ", this.lista_eventos);
-    //     if (this.lista_eventos.length > 0) {
-    //       console.log("Eventos: ", this.lista_eventos);
-
-    //       this.dataSource = new MatTableDataSource<DatosEvento>(this.lista_eventos as DatosEvento[]);
-    //     }
-    //   }, (error) => {
-    //     alert("No se pudo obtener la lista de eventos");
-    //   }
-    // );
     const rolLower = this.rol;
 
     this.eventosService.obtenerListaEventos(rolLower).subscribe(
@@ -101,8 +106,8 @@ export class EventosScreenComponent implements OnInit {
     );
   }
 
-  public goEditar(idUser: number) {
-    //this.router.navigate(["registro-usuarios/alumno/" + idUser]);
+  public goEditar(idEvento: number) {
+    this.router.navigate(["registro-eventos/eventos/" + idEvento]);
   }
 
   public delete(idUser: number) {

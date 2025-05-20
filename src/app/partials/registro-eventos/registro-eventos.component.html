@@ -138,7 +138,7 @@
                     <mat-label>Responsable del evento</mat-label>
                     <mat-select [(ngModel)]="evento.responsable" name="responsable">
                         <mat-option *ngFor="let r of responsables" [value]="r.id">
-                            {{ r.user.first_name }} {{ r.email }}
+                            {{ r.user.first_name }} {{ r.user.last_name }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
