@@ -5,6 +5,8 @@ import { FacadeService } from 'src/app/services/facade.service';
 import { Location } from '@angular/common';
 import { MaestrosService } from 'src/app/services/maestros.service';
 import { AdministradoresService } from 'src/app/services/administradores.service';
+import { EditarEventoModalComponent } from 'src/app/modals/editar-evento-modal/editar-evento-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 declare var $: any;
 
@@ -51,7 +53,8 @@ export class RegistroEventosComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private facadeService: FacadeService,
     private maestrosService: MaestrosService,
-    private adminService: AdministradoresService
+    private adminService: AdministradoresService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -68,42 +71,37 @@ export class RegistroEventosComponent implements OnInit {
       descripcion: '',
       cupoMaximo: ''
     };
-    this.obtenerResponsables();
+    // this.obtenerResponsables();
 
     const idEvento = this.activatedRoute.snapshot.params['id'];
 
-    if (idEvento) {
-      this.editar = true;
-      this.eventosService.getEventoById(idEvento).subscribe((evento) => {
-        this.evento = evento;
+    this.obtenerResponsables().then(() => {
+      if (idEvento) {
+        this.editar = true;
+        this.eventosService.getEventoById(idEvento).subscribe((evento) => {
+          this.evento = evento;
 
-        this.evento.responsable = evento.responsable;
+          // Prellenar valores
+          this.nombre = evento.nombre;
+          this.tipoEvento = evento.tipoEvento;
+          this.fecha_realizacion = evento.fecha_realizacion;
+          this.horaInicio = this.convertirA24Horas(evento.horaInicio);
+          this.horaFin = this.convertirA24Horas(evento.horaFin);
+          this.lugar = evento.lugar;
+          this.descripcion = evento.descripcion;
+          this.cupoMaximo = evento.cupoMaximo;
+          this.programaEducativo = evento.programaEducativo;
 
+          this.evento.responsable = +evento.responsable;
 
-        // Busca en la lista de responsables cargados para preseleccionar
-        const responsableObj = this.responsables.find(r => r.id === evento.responsable);
-        if (responsableObj) {
-          this.responsable = responsableObj.first_name; // asigna el ID, pero el select mostrará el nombre
-        }
+          this.seleccionados = evento.publicoObjetivo
+            ? evento.publicoObjetivo.split(',').map(p => p.trim())
+            : [];
 
-        // Prellenar valores individuales
-        this.nombre = evento.nombre;
-        this.tipoEvento = evento.tipoEvento;
-        this.fecha_realizacion = evento.fecha_realizacion;
-        this.horaInicio = this.convertirA24Horas(evento.horaInicio);
-        this.horaFin = this.convertirA24Horas(evento.horaFin);
-        this.lugar = evento.lugar;
-        this.descripcion = evento.descripcion;
-        this.cupoMaximo = evento.cupoMaximo;
-        this.responsable = evento.responsable;
-        this.programaEducativo = evento.programaEducativo;
-
-        // Convertir string a array
-        this.seleccionados = evento.publicoObjetivo ? evento.publicoObjetivo.split(',').map(p => p.trim()) : [];
-
-        console.log("Evento cargado para editar:", this.evento);
-      });
-    }
+          console.log("Evento cargado para editar:", this.evento);
+        });
+      }
+    });
   }
 
 
@@ -144,35 +142,52 @@ export class RegistroEventosComponent implements OnInit {
     );
   }
 
-  obtenerResponsables() {
-    this.maestrosService.obtenerListaMaestros().subscribe(maestros => {
-      this.adminService.obtenerListaAdmins().subscribe(admins => {
-        // Unificamos ambos arreglos
-        this.responsables = [...maestros, ...admins];
-        console.log("Maestros y Admins: ", this.responsables)
+  obtenerResponsables(): Promise<void> {
+    return new Promise((resolve) => {
+      this.maestrosService.obtenerListaMaestros().subscribe(maestros => {
+        this.adminService.obtenerListaAdmins().subscribe(admins => {
+          this.responsables = [...maestros, ...admins];
+          console.log("Maestros y Admins: ", this.responsables);
+          resolve();
+        });
       });
     });
   }
+
 
   isSelected(nombre: string): boolean {
     return this.seleccionados.includes(nombre);
   }
 
-  checkboxChange(event: any, nombre: string): void {
+  // checkboxChange(event: any, nombre: string): void {
+  //   if (event.checked) {
+  //     if (!this.seleccionados.includes(nombre)) {
+  //       this.seleccionados.push(nombre);
+  //     }
+  //   } else {
+  //     this.seleccionados = this.seleccionados.filter(item => item !== nombre);
+  //   }
+  //   if (this.seleccionados.includes('Estudiantes') && !this.programaEducativo) {
+  //     this.errors.programaEducativo = 'Debes seleccionar un programa educativo.';
+  //   } else {
+  //     delete this.errors.programaEducativo;
+  //   }
+
+  // }
+  checkboxChange(event: any, nombre: string) {
     if (event.checked) {
-      if (!this.seleccionados.includes(nombre)) {
-        this.seleccionados.push(nombre);
+      this.seleccionados.push(nombre);
+    } else {
+      const index = this.seleccionados.indexOf(nombre);
+      if (index >= 0) {
+        this.seleccionados.splice(index, 1);
       }
-    } else {
-      this.seleccionados = this.seleccionados.filter(item => item !== nombre);
-    }
-    if (this.seleccionados.includes('Estudiantes') && !this.programaEducativo) {
-      this.errors.programaEducativo = 'Debes seleccionar un programa educativo.';
-    } else {
-      delete this.errors.programaEducativo;
     }
 
+    // Actualiza el objeto evento
+    this.evento.publicoObjetivo = [...this.seleccionados]; // crea una copia para Angular
   }
+
 
   filtrarLugar() {
     // Reemplaza todo lo que no sea letra, número o espacio
@@ -228,9 +243,45 @@ export class RegistroEventosComponent implements OnInit {
     this.location.back();
   }
 
-  public actualizar() {
+  public editarModal(idEvento: number) {
+    const dialogRef = this.dialog.open(EditarEventoModalComponent, {
+      data: { id: idEvento },
+      height: '288px',
+      width: '328px',
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result?.isEdit) {
+        alert("Evento editado correctamente");
+        // Recargar datos o redireccionar
+        this.router.navigate(["home"]);
+      } else {
+        console.log("No se editó el evento");
+      }
+    });
   }
+
+
+  // public actualizar() {
+  //   this.errors = [];
+
+  //   this.errors = this.eventosService.validarEvento(this.evento, this.editar);
+  //   if (!$.isEmptyObject(this.errors)) {
+  //     return false;
+  //   }
+  //   console.log("Pasó la validación");
+
+  //   this.eventosService.editarEvento(this.data.id, this.data).subscribe(
+  //     (response) => {
+  //       alert("Evento editado correctamente");
+  //       console.log("Evento editado: ", response);
+  //       //Si se editó, entonces mandar al home
+  //       this.router.navigate(["home"]);
+  //     }, (error) => {
+  //       alert("No se pudo editar el evento");
+  //     }
+  //   );
+  // }
 
   public validarNombreEvento(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);

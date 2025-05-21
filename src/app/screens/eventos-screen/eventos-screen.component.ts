@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { EliminarEventoModalComponent } from 'src/app/modals/eliminar-evento-modal/eliminar-evento-modal.component';
 import { EventosService } from 'src/app/services/eventos.service';
 import { FacadeService } from 'src/app/services/facade.service';
 
@@ -110,8 +111,24 @@ export class EventosScreenComponent implements OnInit {
     this.router.navigate(["registro-eventos/eventos/" + idEvento]);
   }
 
-  public delete(idUser: number) {
+  public delete(idEvento: number) {
+    const dialogRef = this.dialog.open(EliminarEventoModalComponent, {
+      data: { id: idEvento}, //Se pasan valores a través del componente
+      height: '288px',
+      width: '328px',
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result.isDelete) {
+        console.log("Evento eliminado");
+        //Recargar página
+        window.location.reload();
+      } else {
+        console.log(result);
+        alert("Evento no eliminado ");
+        console.log("No se eliminó el evento");
+      }
+    });
   }
 }
 

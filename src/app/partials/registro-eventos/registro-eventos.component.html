@@ -107,8 +107,9 @@
                         </div>
                     </div>
                     <div class="checkbox-group" *ngFor="let pub of publicObj; let i = index">
-                        <mat-checkbox class="checkbox-item opc-sc" name="publicoObjetivo" [checked]="isSelected(pub.nombre)"
-                            (change)="checkboxChange($event, pub.nombre)" value="{{pub.nombre}}">
+                        <mat-checkbox class="checkbox-item opc-sc" name="publicoObjetivo"
+                            [checked]="isSelected(pub.nombre)" (change)="checkboxChange($event, pub.nombre)"
+                            value="{{pub.nombre}}">
                             <div class="d-checkbox-nombre">{{pub.nombre}}</div>
                         </mat-checkbox>
                     </div>
@@ -168,16 +169,13 @@
                 <div *ngIf="errors.cupoMaximo" class="invalid-feedback" style="color: red;">
                     {{ errors.cupoMaximo }}
                 </div>
-
-
-
-
+                <pre>{{ evento | json }}</pre>
                 <div class="section-buttons">
                     <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
                     <button *ngIf="!editar" class="btn btn-primary" type="submit"
                         (click)="registrar()">Registrar</button>
                     <button *ngIf="editar" class="btn btn-primary" type="submit"
-                        (click)="actualizar()">Actualizar</button>
+                        (click)="editarModal(evento.id)">Actualizar</button>
                 </div>
             </div>
         </div>

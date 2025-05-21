@@ -21,20 +21,20 @@ export class EventosService {
     private facadeService: FacadeService
   ) { }
 
-  public esquemaEvento() {
-    return {
-      'nombre': ''
-      // 'first_name': '',
-      // 'last_name': '',
-      // 'email': '',
-      // 'password': '',
-      // 'confirmar_password': '',
-      // 'telefono': '',
-      // 'rfc': '',
-      // 'edad': '',
-      // 'ocupacion': ''
-    }
-  }
+  // public esquemaEvento() {
+  //   return {
+  //     'nombre': ''
+  //     // 'first_name': '',
+  //     // 'last_name': '',
+  //     // 'email': '',
+  //     // 'password': '',
+  //     // 'confirmar_password': '',
+  //     // 'telefono': '',
+  //     // 'rfc': '',
+  //     // 'edad': '',
+  //     // 'ocupacion': ''
+  //   }
+  // }
 
   //Validación para el formulario
   public validarEvento(data: any, editar: boolean) {
@@ -109,10 +109,6 @@ export class EventosService {
     return this.http.get<any>(`${environment.url_api}/lista-eventos/?rol=${rol}`, { headers: headers });
   }
 
-  // //Obtener un solo evento dependiendo su ID
-  // public getEventoById(idEvento: Number) {
-  //   return this.http.get<any>(`${environment.url_api}/evento/?id=${idEvento}`, httpOptions);
-  // }
   public getEventoById(idEvento: Number) {
     var token = this.facadeService.getSessionToken();
     var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
@@ -120,10 +116,42 @@ export class EventosService {
   }
 
 
-  //Servicio para actualizar un evento
-  public editarEvento(data: any): Observable<any> {
-    var token = this.facadeService.getSessionToken();
-    var headers = new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token });
-    return this.http.put<any>(`${environment.url_api}/eventos-edit/`, data, { headers: headers });
+  // public editarEvento(idEvento: Number): Observable<any> {
+  //   const token = this.facadeService.getSessionToken();
+  //   const headers = new HttpHeaders({
+  //     'Authorization': 'Bearer ' + token,
+  //     'Content-Type': 'application/json'
+  //   });
+
+  //   return this.http.put<any>(
+  //     `${environment.url_api}/evento-edit/?id=${idEvento}`,
+  //     { headers }
+  //   );
+  // }
+  public editarEvento(idEvento: number, datosEvento: any): Observable<any> {
+  const token = this.facadeService.getSessionToken();
+  const headers = new HttpHeaders({
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json'
+  });
+
+  return this.http.put<any>(
+    `${environment.url_api}/evento-edit/${idEvento}/`, // ✅ URL recomendada
+    datosEvento,                                       // ✅ cuerpo con los datos del formulario
+    { headers }                                        // ✅ opciones
+  );
+}
+
+
+  public eliminarEvento(idEvento: Number): Observable<any> {
+    const token = this.facadeService.getSessionToken();
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    });
+
+    return this.http.delete<any>(`${environment.url_api}/eventos-edit/?id=${idEvento}`, { headers });
   }
+
+
 }
