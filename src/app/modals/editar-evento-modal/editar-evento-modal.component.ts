@@ -12,23 +12,27 @@ export class EditarEventoModalComponent implements OnInit {
   public evento: any = {};
   public horaInicio: string = ""
   public horaFin: string = ""
-  public seleccionados: any[]
+  public seleccionados: string[] = [];
   public errors: any = {};
   constructor(
     private eventoService: EventosService,
-    private dialogRef: MatDialogRef<EditarEventoModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<EditarEventoModalComponent>,
     private router: Router,
-  ) { }
+  ) { this.evento = this.data.evento; }
 
   ngOnInit(): void {
-    this.eventoService.getEventoById(this.data.id).subscribe((evento) => {
-      this.evento = evento;
-
-      this.seleccionados = this.evento.publicoObjetivo ? [...this.evento.publicoObjetivo] : [];
-
-    });
-
+    if (this.evento.publicoObjetivo) {
+      if (typeof this.evento.publicoObjetivo === 'string') {
+        this.seleccionados = this.evento.publicoObjetivo.split(',').map((p: string) => p.trim());
+      } else if (Array.isArray(this.evento.publicoObjetivo)) {
+        this.seleccionados = this.evento.publicoObjetivo;
+      } else {
+        this.seleccionados = [];
+      }
+    } else {
+      this.seleccionados = [];
+    }
   }
 
   public cerrar_modal() {
@@ -36,10 +40,10 @@ export class EditarEventoModalComponent implements OnInit {
   }
 
   public editarEvento() {
-    // console.log("Datos a enviar:", this.evento);
-
     //Validación
     this.errors = [];
+    this.evento.publicoObjetivo = this.seleccionados.join(', ');
+    console.log("Evento a enviar:", this.evento);
     this.eventoService.editarEvento(this.evento.id, this.evento).subscribe(
       (response) => {
         console.log("Editado correctamente");
@@ -50,24 +54,6 @@ export class EditarEventoModalComponent implements OnInit {
         this.dialogRef.close({ isEdit: false });
       }
     );
-
-    // this.errors = this.eventoService.validarEvento(this.evento,true);
-    // if (!$.isEmptyObject(this.errors)) {
-    //   return false;
-    // }
-    // console.log("Pasó la validación");
-
-    // this.eventoService.editarEvento(this.evento).subscribe(
-    //   (response) => {
-    //     alert("Evento editado correctamente");
-    //     console.log("Evento editado: ", response);
-    //     //Si se editó, entonces mandar al home
-    //     this.router.navigate(["home"]);
-    //   }, (error) => {
-    //     console.log(error);
-    //     alert("No se pudo editar el Evento");
-    //   }
-    // );
   }
 
 }

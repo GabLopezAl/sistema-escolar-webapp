@@ -136,9 +136,9 @@ export class EventosService {
   });
 
   return this.http.put<any>(
-    `${environment.url_api}/evento-edit/${idEvento}/`, // ✅ URL recomendada
-    datosEvento,                                       // ✅ cuerpo con los datos del formulario
-    { headers }                                        // ✅ opciones
+    `${environment.url_api}/eventos-edit/?id=${idEvento}`,
+    datosEvento,                                      
+    { headers }                                        
   );
 }
 

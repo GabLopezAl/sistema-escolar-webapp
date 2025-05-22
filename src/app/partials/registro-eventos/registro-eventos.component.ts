@@ -159,21 +159,6 @@ export class RegistroEventosComponent implements OnInit {
     return this.seleccionados.includes(nombre);
   }
 
-  // checkboxChange(event: any, nombre: string): void {
-  //   if (event.checked) {
-  //     if (!this.seleccionados.includes(nombre)) {
-  //       this.seleccionados.push(nombre);
-  //     }
-  //   } else {
-  //     this.seleccionados = this.seleccionados.filter(item => item !== nombre);
-  //   }
-  //   if (this.seleccionados.includes('Estudiantes') && !this.programaEducativo) {
-  //     this.errors.programaEducativo = 'Debes seleccionar un programa educativo.';
-  //   } else {
-  //     delete this.errors.programaEducativo;
-  //   }
-
-  // }
   checkboxChange(event: any, nombre: string) {
     if (event.checked) {
       this.seleccionados.push(nombre);
@@ -243,9 +228,9 @@ export class RegistroEventosComponent implements OnInit {
     this.location.back();
   }
 
-  public editarModal(idEvento: number) {
+  public editarModal() {
     const dialogRef = this.dialog.open(EditarEventoModalComponent, {
-      data: { id: idEvento },
+      data: { evento: this.evento },
       height: '288px',
       width: '328px',
     });
@@ -260,28 +245,6 @@ export class RegistroEventosComponent implements OnInit {
       }
     });
   }
-
-
-  // public actualizar() {
-  //   this.errors = [];
-
-  //   this.errors = this.eventosService.validarEvento(this.evento, this.editar);
-  //   if (!$.isEmptyObject(this.errors)) {
-  //     return false;
-  //   }
-  //   console.log("Pasó la validación");
-
-  //   this.eventosService.editarEvento(this.data.id, this.data).subscribe(
-  //     (response) => {
-  //       alert("Evento editado correctamente");
-  //       console.log("Evento editado: ", response);
-  //       //Si se editó, entonces mandar al home
-  //       this.router.navigate(["home"]);
-  //     }, (error) => {
-  //       alert("No se pudo editar el evento");
-  //     }
-  //   );
-  // }
 
   public validarNombreEvento(event: KeyboardEvent) {
     const charCode = event.key.charCodeAt(0);

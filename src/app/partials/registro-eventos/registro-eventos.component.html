@@ -169,13 +169,12 @@
                 <div *ngIf="errors.cupoMaximo" class="invalid-feedback" style="color: red;">
                     {{ errors.cupoMaximo }}
                 </div>
-                <pre>{{ evento | json }}</pre>
                 <div class="section-buttons">
                     <button class="btn btn-danger" (click)="regresar()">Cancelar</button>
                     <button *ngIf="!editar" class="btn btn-primary" type="submit"
                         (click)="registrar()">Registrar</button>
                     <button *ngIf="editar" class="btn btn-primary" type="submit"
-                        (click)="editarModal(evento.id)">Actualizar</button>
+                        (click)="editarModal()">Actualizar</button>
                 </div>
             </div>
         </div>
